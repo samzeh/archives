@@ -3,9 +3,25 @@ import StarRatings from './StarRatings'
 import ActionButton from './ActionButton'
 import { motion } from 'motion/react'
 import GenreCarousel from './GenreCarousel'
+import { useEffect, useRef } from 'react'
 
-export default function ExpandedDetailCard(props: { onCollapse: () => void, bookInfo: any }) {
+interface ExpandedBookInfo {
+  label?: string
+  authors?: string[] | string
+  average_rating?: number
+  genres?: string[] | string
+  description?: string
+}
 
+export default function ExpandedDetailCard(props: { onCollapse: () => void, bookInfo: ExpandedBookInfo }) {
+  const titleRef = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    if (titleRef.current && props.bookInfo.label) {
+      const textLength = props.bookInfo.label.length
+      titleRef.current.style.setProperty('--text-length', textLength.toString())
+    }
+  }, [props.bookInfo.label])
   const parseInfo = (value: unknown): string[] => {
     if (Array.isArray(value)) {
       return value.map(item => String(item))
@@ -23,7 +39,7 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
       }
     } catch {
       return value
-      .replace(/^\[|\]$/g, '') //remove surrounding brackets
+      .replace(/^\[+|\]+$/g, '') //remove surrounding brackets
       .split(',') //split by comma into an array
       .map((item) => item.trim() // trim white space
       .replace(/^['"]|['"]$/g, '')) // remove extra quotes
@@ -33,6 +49,7 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
 
   const authors = parseInfo(props.bookInfo.authors)
   const genres = parseInfo(props.bookInfo.genres)
+  const displayAuthor = (authors[0] ?? '').replace(/^\[+|\]+$/g, '').replace(/^['"]|['"]$/g, '')
 
   return (
     <motion.div className="expanded-detail-card" layoutId="book-card" onClick={props.onCollapse} transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
@@ -41,9 +58,9 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
       >
         <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg" />
         <div className="info-text">
-          <h1>{props.bookInfo.label}</h1>
-          <p>{authors[0]}</p>
-          <StarRatings rating={props.bookInfo.average_rating} />
+          <h1 ref={titleRef}>{props.bookInfo.label}</h1>
+          <p>{displayAuthor}</p>
+          <StarRatings rating={props.bookInfo.average_rating ?? 0} />
           <div className="button-container">
             <ActionButton title="to read" bgColor='#7AC970' textColor='#ffffff'/>
             <ActionButton title="finished" bgColor='#D9D9D9' textColor='#000000' />

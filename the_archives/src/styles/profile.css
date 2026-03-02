@@ -92,18 +92,42 @@
 .book-info {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  transform: translateY(-12px);
 }
 
 .book-info h1 {
-  font-size: 64px;   
+  font-size: clamp(2.8rem, 4.2vw, 3.6rem);
   margin: 0;
-  line-height: 1.05;
+  line-height: 1.02;
 }
 
 .book-info p {
-  font-size: 22px;
-  margin: 6px 0 0 0; 
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  margin: 6px 0 8px 0;
+  letter-spacing: -0.1em;
   opacity: 0.8;
+}
+
+.book-info .star {
+  height: 2.1em;
+  width: 2.2em;
+  margin-bottom: 8px;
+}
+
+.book-info .star-rating-box {
+  margin-top: 0;
+  align-self: flex-start;
+}
+
+.book-info .button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .book-description {

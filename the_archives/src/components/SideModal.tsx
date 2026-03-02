@@ -59,8 +59,8 @@ export default function SideModal(props: { book: Book | null, onClose: () => voi
             <div className="book-info-container">
               <img src={props.book.cover} className="book-modal-cover" />
               <div className="book-info">
-                <h1>Perks of Being a Wallflower</h1>
-                <p>Stephen Chbosky</p>
+                <h1>Dune</h1>
+                <p>Frank Herbert</p>
                 <StarRatings rating={4} />
                 <div className="button-container">
                   <ActionButton title="remove" bgColor='#da4021' textColor='#ffffff'/>

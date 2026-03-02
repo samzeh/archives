@@ -14,6 +14,7 @@ export interface Book {
 export default function SearchResults(props: { results: Book[], handleSearch: (id: number) => void }) {
   const orderedResults = [...props.results].reverse()
   const hasResults = props.results && props.results.length > 0
+  const cleanAuthorText = (value: string) => value.replace(/\[|\]|"|'/g, '').trim()
 
   return (
     <motion.div
@@ -38,7 +39,7 @@ export default function SearchResults(props: { results: Book[], handleSearch: (i
                 <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg" alt={`${result.title} cover`} className="search-result-cover" />
                 <div className="search-result-info">
                   <h1>{result.title}</h1>
-                  <p>{result.authors}</p>
+                  <p>{cleanAuthorText(result.authors)}</p>
                 </div>
               </div>
             </motion.div>
