@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/footer.css'
 import { BsSearch } from "react-icons/bs";
-import { useState} from 'react';
 import SearchResults from './SearchResults';
 import { useQuery } from '@tanstack/react-query';
 
@@ -12,11 +11,21 @@ const searchBooks = async(search_query: string) => {
 
 export default function SearchBar() {
   const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+
+  useEffect(()=> {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [query])
+
 
   const { data: searchResults, isLoading } = useQuery({
-    queryKey: ["search_results", query],
-    queryFn: () => searchBooks(query),
-    enabled: query.length > 0,
+    queryKey: ["search_results", debouncedQuery],
+    queryFn: () => searchBooks(debouncedQuery),
+    enabled: debouncedQuery.length > 0,
     refetchOnWindowFocus: false,
   })
   
