@@ -3,7 +3,7 @@ import '../styles/detailpage.css'
 import StarRatings from './StarRatings'
 import { motion } from 'motion/react'
 
-export default function DetailCard(props: { onExpand: () => void } ) {
+export default function DetailCard(props: { onExpand: () => void, bookInfo: any } ) {
   return (
     <motion.div className="detail-card-container" onClick={props.onExpand}>
       <motion.div className="detail-card" layoutId="book-card" transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
@@ -13,8 +13,8 @@ export default function DetailCard(props: { onExpand: () => void } ) {
           animate={{ opacity: 1, transition: { delay: 0.15, duration: 0.2 } }}
           exit={{ opacity: 0, transition: { duration: 0.1 } }}
         >
-          <h1 className="book-title">Perks of Being a Wallflower</h1>
-          <StarRatings rating={4} />
+          <h1 className="book-title">{props.bookInfo.label}</h1>
+          <StarRatings rating={props.bookInfo.average_rating} />
         </motion.div>
         <img
           className="detail-card-left"

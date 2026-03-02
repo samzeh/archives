@@ -1,11 +1,39 @@
-import React from 'react'
 import '../styles/expandeddetailpage.css'
 import StarRatings from './StarRatings'
 import ActionButton from './ActionButton'
 import { motion } from 'motion/react'
 import GenreCarousel from './GenreCarousel'
 
-export default function ExpandedDetailCard(props: { onCollapse: () => void }) {
+export default function ExpandedDetailCard(props: { onCollapse: () => void, bookInfo: any }) {
+
+  const parseInfo = (value: unknown): string[] => {
+    if (Array.isArray(value)) {
+      return value.map(item => String(item))
+    }
+
+    if (typeof value !== 'string') { return [] }
+
+    try {
+      const parsed = JSON.parse(value.replace(/'/g, '"'))
+
+      if (Array.isArray(parsed)) {
+        return parsed.map((item) => String(item))
+      } else {
+        return []
+      }
+    } catch {
+      return value
+      .replace(/^\[|\]$/g, '') //remove surrounding brackets
+      .split(',') //split by comma into an array
+      .map((item) => item.trim() // trim white space
+      .replace(/^['"]|['"]$/g, '')) // remove extra quotes
+      .filter(Boolean) // remove empty values
+    }
+  }
+
+  const authors = parseInfo(props.bookInfo.authors)
+  const genres = parseInfo(props.bookInfo.genres)
+
   return (
     <motion.div className="expanded-detail-card" layoutId="book-card" onClick={props.onCollapse} transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
       <div
@@ -13,9 +41,9 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void }) {
       >
         <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg" />
         <div className="info-text">
-          <h1>Perks of Being a Wallflower</h1>
-          <p>Stephen Chbosky</p>
-          <StarRatings rating={4} />
+          <h1>{props.bookInfo.label}</h1>
+          <p>{authors[0]}</p>
+          <StarRatings rating={props.bookInfo.average_rating} />
           <div className="button-container">
             <ActionButton title="to read" bgColor='#7AC970' textColor='#ffffff'/>
             <ActionButton title="finished" bgColor='#D9D9D9' textColor='#000000' />
@@ -23,9 +51,9 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void }) {
         </div>
       </div>
       <div><hr /></div>
-      <GenreCarousel genres={['Fiction', 'Coming of Age', 'Contemporary', 'Fiction', 'Coming of Age', 'Contemporary']} />
+      <GenreCarousel genres={genres} />
       <div className="description">
-        standing on the fringes of life offers a unique perspective. But there comes a time to see what it looks like from the dance floor. This haunting novel about the dilemma of passivity vs. passion marks the stunning debut of a provocative new voice in contemporary fiction: The Perks of Being A WALLFLOWER...         standing on the fringes of life offers a unique perspective. But there comes a time to see what it looks like from the dance floor. This haunting novel about the dilemma of passivity vs. passion marks the stunning debut of a provocative new voice in contemporary fiction: The Perks of Being A WALLFLOWER...
+        {props.bookInfo.description}
       </div>
     </motion.div>
   )

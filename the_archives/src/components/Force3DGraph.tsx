@@ -31,7 +31,8 @@ export default function Force3DGraph(props: {
   onNodeClick?: (node: NodeObject) => void, 
   onDismiss?: () => void, 
   cardVisible?: boolean,
-  liked_book_id?: number
+  liked_book_id?: number,
+  onGraphDataReady?: (nodes: NodeObject[]) => void
 }) {
 
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -171,6 +172,8 @@ export default function Force3DGraph(props: {
 
     const nodes_list = graphDataInfo.nodes
     const links_list = graphDataInfo.links
+
+    props.onGraphDataReady?.(graphDataInfo.nodes)
     console.log(nodes_list)
 
     const graphData = {

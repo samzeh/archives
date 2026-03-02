@@ -13,6 +13,8 @@ function Home() {
   const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [likedBookId, setLikedBookId] = useState<number | undefined>(undefined)
+  const [nodesById, setNodesById] = useState<Map<number, NodeObject>>(new Map())
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const navigate = useNavigate()
   const goToProfile = () => {
@@ -35,6 +37,10 @@ function Home() {
           setIsExpanded(false)
         }}
         liked_book_id={likedBookId}
+
+        onGraphDataReady={(nodes) => {
+          setNodesById(new Map(nodes.map(node => [node.id, node])))
+        }}
       />
 
       <AnimatePresence>
@@ -48,9 +54,9 @@ function Home() {
             style={{ position: 'fixed', left: 200, top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}
           >
             {!isExpanded ? (
-              <DetailCard key="collapsed" onExpand={() => setIsExpanded(true)} />
+              <DetailCard key="collapsed" onExpand={() => setIsExpanded(true)} bookInfo={nodesById.get(selectedNode.id) || null} />
             ) : (
-              <ExpandedDetailCard key="expanded" onCollapse={() => setIsExpanded(false)} />
+              <ExpandedDetailCard key="expanded" onCollapse={() => setIsExpanded(false)} bookInfo={nodesById.get(selectedNode.id) || null}/>
             )}
           </motion.div>
         )}
