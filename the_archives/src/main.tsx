@@ -1,10 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Home from './pages/Home.tsx'
+import Graph from './pages/Graph.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Profile from './pages/Profile.tsx'
+import Home from './pages/Home.tsx'
 
 const queryClient = new QueryClient()
 
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: '/profile',
     element: <Profile />
+  },
+  {
+    path: '/graph',
+    element: <Graph />
   }
 ])
 
