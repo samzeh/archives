@@ -2,14 +2,24 @@ import '../styles/detailpage.css'
 import StarRatings from './StarRatings'
 import { motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
+import { getBookURL, parseInfo } from '../utils/bookCover'
 
 interface DetailBookInfo {
   label?: string
+  authors?: string  
   average_rating?: number
+  book_id?: number
+  description?: string
+  genres?: string
 }
 
 export default function DetailCard(props: { onExpand: () => void, bookInfo: DetailBookInfo } ) {
   const titleRef = useRef<HTMLHeadingElement>(null)
+  
+
+  const author = parseInfo(props.bookInfo.authors)
+  const displayAuthor = (author[0] ?? '').replace(/^\[+|\]+$/g, '').replace(/^['"]|['"]$/g, '')
+  const cacheKey = `${props.bookInfo.label}-${displayAuthor}`
 
   useEffect(() => {
     if (titleRef.current && props.bookInfo.label) {
@@ -32,7 +42,9 @@ export default function DetailCard(props: { onExpand: () => void, bookInfo: Deta
         </motion.div>
         <img
           className="detail-card-left"
-          src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg"
+          src={getBookURL(props.bookInfo.label ?? '', displayAuthor)}
+          data-book-key={cacheKey}
+          alt={`${props.bookInfo.label} cover`}
         />
         <p className="bottom-text">click to see more</p>
       </motion.div>

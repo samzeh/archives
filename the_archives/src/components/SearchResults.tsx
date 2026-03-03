@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
+import { getBookURL, parseInfo } from '../utils/bookCover'
 
 export interface Book {
   book_id: number;
@@ -14,7 +15,6 @@ export interface Book {
 export default function SearchResults(props: { results: Book[], handleSearch: (id: number) => void, isVisible: () => void }) {
   const orderedResults = [...props.results].reverse()
   const hasResults = props.results && props.results.length > 0
-  const cleanAuthorText = (value: string) => value.replace(/\[|\]|"|'/g, '').trim()
   const [selectedIndex, setSelectedIndex] = useState(orderedResults.length-1)
 
   const handleSelectionChange = (e: React.KeyboardEvent) => {
@@ -54,6 +54,14 @@ export default function SearchResults(props: { results: Book[], handleSearch: (i
         const isFirst = orderedResults.length === 1 ? index == 0 : index === orderedResults.length - 1
         const isLast = orderedResults.length === 1 ? index == 0 :index === 0
 
+        const authors = parseInfo(result.authors)
+        const author = (authors[0] ?? '').replace(/^\[+|\]+$/g, '').replace(/^['"]|['"]$/g, '')
+
+        const cacheKey = `${result.title}-${author}`
+
+        
+
+
         return (
           <React.Fragment key={result.book_id}>
             <motion.div
@@ -72,10 +80,10 @@ export default function SearchResults(props: { results: Book[], handleSearch: (i
                 onKeyDown={handleSelectionChange}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg" alt={`${result.title} cover`} className="search-result-cover" />
+                <img src={getBookURL(result.title, author)} alt={`${result.title} cover`} className="search-result-cover" />
                 <div className="search-result-info">
                   <h1>{result.title}</h1>
-                  <p>{cleanAuthorText(result.authors)}</p>
+                  <p>{author}</p>
                 </div>
 
                 {isSelected && <span className="search-result-arrow">↵</span>}

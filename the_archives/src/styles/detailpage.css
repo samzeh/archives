@@ -65,3 +65,7 @@ h1.book-title {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.detail-card-left {
+  aspect-ratio: 5 / 7;
+}

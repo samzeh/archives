@@ -4,6 +4,7 @@ import ActionButton from './ActionButton'
 import { motion } from 'motion/react'
 import GenreCarousel from './GenreCarousel'
 import { useEffect, useRef } from 'react'
+import { getBookURL, parseInfo } from '../utils/bookCover'
 
 interface ExpandedBookInfo {
   label?: string
@@ -22,41 +23,23 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
       titleRef.current.style.setProperty('--text-length', textLength.toString())
     }
   }, [props.bookInfo.label])
-  const parseInfo = (value: unknown): string[] => {
-    if (Array.isArray(value)) {
-      return value.map(item => String(item))
-    }
-
-    if (typeof value !== 'string') { return [] }
-
-    try {
-      const parsed = JSON.parse(value.replace(/'/g, '"'))
-
-      if (Array.isArray(parsed)) {
-        return parsed.map((item) => String(item))
-      } else {
-        return []
-      }
-    } catch {
-      return value
-      .replace(/^\[+|\]+$/g, '') //remove surrounding brackets
-      .split(',') //split by comma into an array
-      .map((item) => item.trim() // trim white space
-      .replace(/^['"]|['"]$/g, '')) // remove extra quotes
-      .filter(Boolean) // remove empty values
-    }
-  }
 
   const authors = parseInfo(props.bookInfo.authors)
   const genres = parseInfo(props.bookInfo.genres)
   const displayAuthor = (authors[0] ?? '').replace(/^\[+|\]+$/g, '').replace(/^['"]|['"]$/g, '')
+
+  const cacheKey = `${props.bookInfo.label}-${displayAuthor}`
 
   return (
     <motion.div className="expanded-detail-card" layoutId="book-card" onClick={props.onCollapse} transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
       <div
         className="info-section"
       >
-        <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1341952742i/15745753.jpg" />
+        <img 
+          src={getBookURL(props.bookInfo.label ?? '', displayAuthor)}
+          data-book-key={cacheKey}
+          alt={`${props.bookInfo.label} cover`}
+         />
         <div className="info-text">
           <h1 ref={titleRef}>{props.bookInfo.label}</h1>
           <p>{displayAuthor}</p>
