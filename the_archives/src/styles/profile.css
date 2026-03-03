@@ -182,3 +182,151 @@
   align-items: center;
   gap: 12px;
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .header {
+    padding: 40px 30px;
+  }
+
+  .header h1 {
+    font-size: 50px;
+  }
+
+  .header-icons svg {
+    height: 50px !important;
+    width: 50px !important;
+  }
+
+  .profile-image {
+    height: 50px;
+    width: 50px;
+  }
+
+  .section-box {
+    margin-left: 30px;
+    margin-bottom: 35px;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+
+  .book-cover {
+    height: 240px;
+    width: calc(240px * 5 / 7);
+  }
+
+  .book-carousel {
+    gap: 22px;
+  }
+
+  .book-modal {
+    width: min(60vw, 700px);
+    padding: 30px 24px;
+  }
+
+  .book-modal-cover {
+    width: clamp(140px, 20vw, 220px);
+  }
+
+  .book-info-container {
+    gap: 24px;
+  }
+
+  .book-info h1 {
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+  }
+
+  .book-description {
+    font-size: 1.3rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .header {
+    padding: 24px 16px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+  }
+
+  .header-icons {
+    gap: 10px;
+  }
+
+  .header-icons svg {
+    height: 38px !important;
+    width: 38px !important;
+  }
+
+  .profile-image {
+    height: 38px;
+    width: 38px;
+  }
+
+  .section-box {
+    margin-left: 16px;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .book-cover {
+    height: 170px;
+    width: calc(170px * 5 / 7);
+  }
+
+  .book-carousel {
+    gap: 14px;
+  }
+
+  .book-modal {
+    width: 85vw;
+    padding: 24px 16px;
+    border-radius: 0;
+  }
+
+  .book-modal-cover {
+    width: clamp(90px, 28vw, 140px);
+  }
+
+  .book-info-container {
+    gap: 14px;
+  }
+
+  .book-info h1 {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .book-info p {
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    margin: 4px 0 6px 0;
+  }
+
+  .book-info .star {
+    height: 1.6em;
+    width: 1.7em;
+  }
+
+  .book-info .button-container {
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .book-description {
+    font-size: 1rem;
+  }
+
+  .rating-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .review-input {
+    min-height: 60px;
+  }
+}
