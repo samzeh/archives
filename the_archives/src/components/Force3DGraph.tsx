@@ -143,7 +143,7 @@ export default function Force3DGraph(props: {
       }
       const lookAt = { x: node.x, y: node.y, z: node.z }
 
-      graph.cameraPosition(newPos, lookAt, 3000)
+      graph.cameraPosition(newPos, lookAt, 2200)
       highlightNode(node)
     })
 

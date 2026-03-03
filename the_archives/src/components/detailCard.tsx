@@ -24,8 +24,8 @@ export default function DetailCard(props: { onExpand: () => void, bookInfo: Deta
         <motion.div
           className="detail-card-right"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { delay: 0.15, duration: 0.2 } }}
-          exit={{ opacity: 0, transition: { duration: 0.1 } }}
+          animate={{ opacity: 1, transition: { delay: 0.152, duration: 0.23250 } }}
+          exit={{ opacity: 0, transition: { duration: 0.13 } }}
         >
           <h1 ref={titleRef} className="book-title">{props.bookInfo.label}</h1>
           <StarRatings rating={props.bookInfo.average_rating ?? 0} />

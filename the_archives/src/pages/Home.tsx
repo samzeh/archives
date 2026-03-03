@@ -61,7 +61,7 @@ function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            style={{ position: 'fixed', left: 200, top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}
+            style={{ position: 'fixed', left: 200, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }}
           >
             {!isExpanded ? (
               <DetailCard key="collapsed" onExpand={() => setIsExpanded(true)} bookInfo={nodesById.get(selectedNode.id) || null} />
