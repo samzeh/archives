@@ -80,7 +80,12 @@ export default function SearchResults(props: { results: Book[], handleSearch: (i
                 onKeyDown={handleSelectionChange}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                <img src={getBookURL(result.title, author)} alt={`${result.title} cover`} className="search-result-cover" />
+                <img 
+                  src={getBookURL(result.title, author)} 
+                  data-book-key={cacheKey}
+                  alt={`${result.title} cover`} 
+                  className="search-result-cover" 
+                />
                 <div className="search-result-info">
                   <h1>{result.title}</h1>
                   <p>{author}</p>
