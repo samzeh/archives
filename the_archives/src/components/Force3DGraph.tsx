@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import ForceGraph3D from '3d-force-graph'
 import { useQuery } from '@tanstack/react-query'
+import loadingGif from '../assets/loading.gif'
 
 interface ForceGraph3DInstance {
   _destructor?: () => void
@@ -205,9 +206,11 @@ return (
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        backgroundColor: '#000000', color: 'white', fontSize: '1.5rem', zIndex: 10
+        color: '#44362d', fontSize: '1.5rem', zIndex: 10,
+        flexDirection: 'column',
       }}>
-        Loading...
+        <img src={loadingGif} alt="Loading..." style={{ width: 300, height: 300 }} />
+        <p> loading... </p>
       </div>
     )}
     <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
