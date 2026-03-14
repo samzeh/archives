@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Profile from './pages/Profile.tsx'
 import Home from './pages/Home.tsx'
+import ProtectedRoute from './ProtectedRoute.tsx'
 
 const queryClient = new QueryClient()
 
@@ -15,12 +16,11 @@ const router = createBrowserRouter([
     element: <Home />
   },
   {
-    path: '/profile',
-    element: <Profile />
-  },
-  {
-    path: '/graph',
-    element: <Graph />
+    element: <ProtectedRoute />,
+    children: [
+      { path: '/recommendation-graph', element: <Graph /> },
+      { path: '/profile-page', element: <Profile /> },
+    ]
   }
 ])
 
