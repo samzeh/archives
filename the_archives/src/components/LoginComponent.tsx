@@ -8,15 +8,17 @@ export default function LoginComponent() {
   const [ showPassword, setShowPassword] = useState(false)
   const [ username, setUsername] = useState('')
   const [ password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
 
   const handleLogin = async () => {
+    setError('')
     try {
       await login(username, password)
       navigate('/recommendation-graph')
-    } catch (error) {
-      console.error('Error logging in:', error)
+    } catch (err) {
+      setError(err.message)
     }
   }
   return (
@@ -28,6 +30,11 @@ export default function LoginComponent() {
           {showPassword ? <AiOutlineEyeInvisible onClick={() => setShowPassword(false)} /> : <AiOutlineEye onClick={() => setShowPassword(true)} />}
         </button>
       </div>
+      {error && (
+        <div style={{ color: 'red', fontSize: '0.85em', marginTop: 16, textAlign: 'left' }}>
+          {error}
+        </div>
+      )}
       <button className="login-button"> Forgot Password</button>
       <button className="login-button" onClick={handleLogin}>
         Login

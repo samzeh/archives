@@ -9,15 +9,16 @@ export default function SignupComponent() {
   const [ email, setEmail] = useState('')
   const [ username, setUsername] = useState('')
   const [ password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const handleSignup = async () => {
+    setError('')
     try {
       await signup(email, password, username)
       navigate('/recommendation-graph')
-
-    } catch (error) {
-      console.error('Error signing up:', error)
+    } catch (err) {
+      setError(err.message)
     }
   }
 
@@ -31,6 +32,11 @@ export default function SignupComponent() {
           {showPassword ? <AiOutlineEyeInvisible onClick={() => setShowPassword(false)} /> : <AiOutlineEye onClick={() => setShowPassword(true)} />}
         </button>
       </div>
+      {error && (
+        <div style={{ color: 'red', fontSize: '0.85em', marginTop: 16, textAlign: 'left' }}>
+          {error}
+        </div>
+      )}
       <button className="login-button" onClick={handleSignup}>Signup</button>
     </div>
   )
