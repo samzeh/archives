@@ -88,8 +88,8 @@ export async function addBookToProfile(userId: string, book: ProfileBook) {
   }, { merge: true })
 }
 
-export async function removeBookFromProfile(userId: string, book: ProfileBook) {
-  const bookRef = doc(db, "users", userId, "saved_books", String(book.book_id));
+export async function removeBookFromProfile(userId: string, bookId: number) {
+  const bookRef = doc(db, "users", userId, "saved_books", String(bookId));
   await deleteDoc(bookRef);
 }
 

@@ -4,9 +4,18 @@ import '../styles/profile.css'
 import StarRatings from './StarRatings'
 import ActionButton from './ActionButton'
 import GenreCarousel from './GenreCarousel'
+import { removeBookFromProfile, getCurrentUserId } from '../firebase/firestoreFunctions'
 
 type Book = { id: number, cover: string }
 
+const handleRemoveFromProfile = (bookId: number) => {
+  const userId = getCurrentUserId();
+  if (!userId) {
+    alert('You must be logged in to remove books.');
+    return;
+  }
+  removeBookFromProfile(userId, bookId)
+}
 export default function SideModal(props: { book: Book | null, onClose: () => void }) {
   const [userRating, setUserRating] = useState(0)
   const [comment, setComment] = useState('')
@@ -63,7 +72,7 @@ export default function SideModal(props: { book: Book | null, onClose: () => voi
                 <p>Frank Herbert</p>
                 <StarRatings rating={4} />
                 <div className="button-container">
-                  <ActionButton title="remove" bgColor='#da4021' textColor='#ffffff'/>
+                  <ActionButton onClick={() => handleRemoveFromProfile(props.book?.id)} title="remove" bgColor='#da4021' textColor='#ffffff'/>
                   <ActionButton title="to read" bgColor='#D9D9D9' textColor='#000000' />
                 </div>
               </div>
