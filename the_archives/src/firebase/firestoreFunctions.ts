@@ -102,3 +102,13 @@ export async function addRating(userId: string, bookId: string, rating: number) 
   const bookRef = doc(db, "users", userId, "saved_books", String(bookId));
   await setDoc(bookRef, { your_ratings: rating}, { merge: true });
 }
+
+export async function getUserProfileBooks(userId: string): Promise<ProfileBook[]> {
+  const booksRef = collection(db, "users", userId, "saved_books")
+  const querySnapshot = await getDocs(booksRef)
+  const books: ProfileBook[] = [];
+  querySnapshot.forEach((doc) => {
+    books.push(doc.data() as ProfileBook)
+  })
+  return books;
+}

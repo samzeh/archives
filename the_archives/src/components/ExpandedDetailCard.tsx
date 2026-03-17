@@ -10,6 +10,7 @@ import type { ProfileBook } from '../type/books'
 
 interface ExpandedBookInfo {
   id?: number
+  book_id?: number
   label?: string
   authors?: string[] | string
   average_rating?: number
@@ -77,7 +78,7 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
             <ActionButton   
               onClick={(e) => {
                 e.stopPropagation();
-                handleAddToProfile({ book_id: String(props.bookInfo.id), your_ratings: 0, comment: '', status: "to_read" });
+                handleAddToProfile({ book_id: String(props.bookInfo.book_id), your_ratings: 0, comment: '', status: "to_read" });
               }} 
               title="to read" 
               bgColor='#7AC970' 
@@ -85,7 +86,7 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
             <ActionButton 
               onClick={(e) => {
                 e.stopPropagation();
-                handleAddToProfile({ book_id: String(props.bookInfo.id), your_ratings: 0, comment: '', status: "finished" });
+                handleAddToProfile({ book_id: String(props.bookInfo.book_id), your_ratings: 0, comment: '', status: "finished" });
               }} 
               title="finished" 
               bgColor='#D9D9D9' 
