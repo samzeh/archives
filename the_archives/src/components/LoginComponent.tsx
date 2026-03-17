@@ -23,7 +23,7 @@ export default function LoginComponent({ setSelectedOption }: DefaultHomeCompone
     setError('')
     try {
       await login(username, password)
-      navigate('/recommendation-graph')
+      navigate('/recommendation-list')
     } catch (err) {
       setError(err.message)
     }

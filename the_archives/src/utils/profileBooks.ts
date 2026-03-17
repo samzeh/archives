@@ -8,7 +8,7 @@ export async function getBookInfo(){
   const bookIds = profileBooks.map(book => Number(book.book_id));
   if (bookIds.length === 0) return { finishedBooks: [], toReadBooks: [] };
 
-  const response = await fetch('http://localhost:3000/api/books/batch', {
+  const response = await fetch('/api/books/batch', {
     method: 'POST', 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ bookIds }),

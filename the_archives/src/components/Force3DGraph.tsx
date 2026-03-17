@@ -206,9 +206,17 @@ return (
   <div style={{ width: '100%', height: '100%', position: 'relative' }}>
     {isLoading && (
       <div style={{
-        position: 'absolute', inset: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#44362d', fontSize: '1.5rem', zIndex: 10,
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        background: '#FFF8EE',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#44362d',
+        fontSize: '1.5rem',
+        zIndex: 10,
         flexDirection: 'column',
       }}>
         <img src={loadingGif} alt="Loading..." style={{ width: 300, height: 300 }} />

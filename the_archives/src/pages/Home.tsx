@@ -4,6 +4,7 @@ import HomeComponent from '../components/HomeComponent.tsx'
 import { useNavigate } from 'react-router-dom'
 import { isLoggedIn } from '../firebase/firestoreFunctions.ts'
 import '../styles/login.css'
+import loadingGif from '../assets/loading.gif'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -14,14 +15,26 @@ const Home = () => {
     isLoggedIn()
       .then((loggedIn) => {
         if (loggedIn) {
-          navigate('/recommendation-graph')
+          navigate('/recommendation-list')
         } else {
           setCheckingAuth(false)
         }
       })
   }, [navigate])
 
-  if (checkingAuth) return <p>Loading...</p>
+  if (checkingAuth) 
+    return (
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: '#44362d', fontSize: '1.5rem', zIndex: 10,
+        flexDirection: 'column',
+      }}>
+        <img src={loadingGif} alt="Loading..." style={{ width: 300, height: 300 }} />
+        <p> loading... </p>
+      </div>
+    )
+
   
   return (
     <div>

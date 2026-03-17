@@ -7,6 +7,7 @@ import '../styles/profile.css'
 import mockPfp from '../assets/mock_pfp.png'
 import { useNavigate } from 'react-router-dom'
 import { getBookInfo } from '../utils/profileBooks'
+import loadingGif from '../assets/loading.gif'
 
 export default function Profile() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
@@ -27,6 +28,17 @@ export default function Profile() {
 
   return (
     <>
+      {isLoading && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: '#44362d', fontSize: '1.5rem', zIndex: 10,
+          flexDirection: 'column',
+        }}>
+          <img src={loadingGif} alt="Loading..." style={{ width: 300, height: 300 }} />
+          <p> loading... </p>
+        </div>
+      )}
       <div className="header">
         <h1>Sam's Library</h1>
         <div className="header-icons">
@@ -37,12 +49,12 @@ export default function Profile() {
 
       <div className="section-box">
         <h1 className="section-title">Read:</h1>
-        {isLoading ? <div>Loading...</div> : isError ? <div>Error loading books</div> : <BookCarousel books={finishedBooks} onBookClick={setSelectedBook} />}
+        {isError ? <div>Error loading books</div> : <BookCarousel books={finishedBooks} onBookClick={setSelectedBook} />}
       </div>
 
       <div className="section-box">
         <h1 className="section-title">To Be Read:</h1>
-        {isLoading ? <div>Loading...</div> : isError ? <div>Error loading books</div> : <BookCarousel books={toReadBooks} onBookClick={setSelectedBook} />}
+        {isError ? <div>Error loading books</div> : <BookCarousel books={toReadBooks} onBookClick={setSelectedBook} />}
       </div>
 
       <SideModal 

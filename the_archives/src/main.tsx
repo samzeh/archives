@@ -18,7 +18,7 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
-      { path: '/recommendation-graph', element: <Graph /> },
+      { path: '/recommendation-list', element: <Graph /> },
       { path: '/profile-page', element: <Profile /> },
     ]
   }
