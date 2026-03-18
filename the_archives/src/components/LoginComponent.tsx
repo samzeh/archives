@@ -23,6 +23,7 @@ export default function LoginComponent({ setSelectedOption }: DefaultHomeCompone
     setError('')
     try {
       await login(username, password)
+      localStorage.removeItem('guest')
       navigate('/recommendation-list')
     } catch (err) {
       setError(err.message)
