@@ -59,8 +59,6 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
     }
   }
 
-  const isGuest = localStorage.getItem('guest') === 'true'
-
   return (
     <motion.div className="expanded-detail-card" layoutId="book-card" onClick={props.onCollapse} transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
       <div className="info-section">

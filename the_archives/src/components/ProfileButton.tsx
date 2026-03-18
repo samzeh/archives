@@ -1,4 +1,3 @@
-import React from 'react'
 import '../styles/footer.css'
 import mockPfp from '../assets/mock_pfp.png'
 

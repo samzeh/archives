@@ -11,6 +11,7 @@ import {
  } from "firebase/auth";
 import type { User } from "firebase/auth";
 import type { ProfileBook } from "../type/books";
+import { getErrorMessage } from "../utils/error";
 
 
 export async function signup (email: string, password: string, username: string): Promise<User> {
@@ -89,12 +90,8 @@ export async function login(identifier: string, password: string): Promise<User>
 export async function logout() {
   try {
     await signOut(auth);
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error("Logout error:", err.message);
-    } else {
-      console.error("Logout error:", err);
-    }
+  } catch (e) {
+    console.log(getErrorMessage(e));
   }
 }
 
@@ -114,13 +111,9 @@ export async function deleteAccount(password: string) {
     await deleteDoc(doc(db, "users", user!.uid));
     await user!.delete();
 
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error("Delete account error:", err.message);
-    } else {
-      console.error("Delete account error:", err);
-    }
-    throw err;
+  } catch (e) {
+    console.log(getErrorMessage(e));
+    throw e;
   }
 }
 

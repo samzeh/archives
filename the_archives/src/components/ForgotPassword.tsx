@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import '../styles/login.css'
 import { resetPassword } from '../firebase/firestoreFunctions'
+import { getErrorMessage } from '../utils/error'
 
 interface DefaultHomeComponentsProps {
   setSelectedOption: React.Dispatch<React.SetStateAction<"login" | "signup" | "guest" | "forgot_password" | null>>
@@ -15,8 +16,8 @@ export default function ForgotPassword({ setSelectedOption }: DefaultHomeCompone
     try {
       await resetPassword(email)
       setSelectedOption("login")
-    } catch (err) {
-      setError(err.message)
+    } catch (e) {
+      setError(getErrorMessage(e))
     }
   }
   return (

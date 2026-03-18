@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import '../styles/login.css'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { signup } from '../firebase/firestoreFunctions'
 import { useNavigate } from 'react-router-dom'
+import { getErrorMessage } from '../utils/error'
 
 export default function SignupComponent() {
   const [ showPassword, setShowPassword] = useState(false)
@@ -17,8 +18,8 @@ export default function SignupComponent() {
     try {
       await signup(email, password, username)
       navigate('/recommendation-list')
-    } catch (err) {
-      setError(err.message)
+    } catch (e) {
+      setError(getErrorMessage(e));
     }
   }
 

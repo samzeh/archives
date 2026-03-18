@@ -1,7 +1,6 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { isLoggedIn } from "./firebase/firestoreFunctions";
 import { useState, useEffect } from "react";
-import loadingGif from './assets/loading.gif'
 import LoadingOverlay from "./components/LoadingOverlay";
 
 export default function ProtectedRoute() {

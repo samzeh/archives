@@ -6,6 +6,7 @@ import ActionButton from './ActionButton'
 import GenreCarousel from './GenreCarousel'
 import { getBookURL, parseInfo } from '../utils/bookCover'
 import { removeBookFromProfile, getCurrentUserId, addRating, addComment, getRating, getComment, addBookToProfile } from '../firebase/firestoreFunctions'
+import { getErrorMessage } from '../utils/error';
 
 interface BookType {
   book_id: number;
@@ -67,11 +68,11 @@ export default function SideModal(props: { book: BookType | null, onClose: () =>
   const handleRemoveFromProfile = async (bookId: string | number | undefined) => {
     if (userId && bookId) {
       try {
-        await removeBookFromProfile(userId, String(bookId));
+        await removeBookFromProfile(userId, Number(bookId));
         props.onClose();
         if (props.onBookRemoved) props.onBookRemoved();
-      } catch (err) {
-        alert('Failed to remove book. Please check your connection or permissions.');
+      } catch (e) {
+        alert(getErrorMessage(e));
       }
     }
   };

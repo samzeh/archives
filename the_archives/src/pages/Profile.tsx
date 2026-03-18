@@ -14,6 +14,8 @@ import { logout, deleteAccount, getDisplayName,  } from '../firebase/firestoreFu
 import mockPfp from '../assets/mock_pfp.png'
 import ActionButton from '../components/ActionButton'
 import LoadingOverlay from '../components/LoadingOverlay'
+import { getErrorMessage } from '../utils/error'
+import type { Book } from '../type/books'
 
 
 export default function Profile() {
@@ -39,12 +41,8 @@ export default function Profile() {
       await deleteAccount(password);
       await logout();
       navigate('/');
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setDeleteError(e.message);
-      } else {
-        setDeleteError('Failed to delete account; check your password.');
-      }
+    } catch (e) {
+      setDeleteError(getErrorMessage(e));
     }
   }
   
@@ -52,6 +50,7 @@ export default function Profile() {
     setUsernameError('');
     setDisplayNameError('');
     const userId = getCurrentUserId();
+    if (!userId) return;
     let hasError = false;
     if (!username.trim()) {
       setUsernameError('Username cannot be empty.');
@@ -64,24 +63,16 @@ export default function Profile() {
     if (hasError) return;
     try {
       await changeDisplayName(userId, displayName)
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setDisplayNameError(e.message);
-      } else {
-        setDisplayNameError('Failed to update display name.');
-      }
+    } catch (e) {
+      setDisplayNameError(getErrorMessage(e));
       return;
     }
     if (username !== currentUsername) {
       try {
         await changeUsername(userId, username)
         setCurrentUsername(username);
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          setUsernameError(e.message);
-        } else {
-          setUsernameError('Failed to update username.');
-        }
+      } catch (e) {
+        setUsernameError(getErrorMessage(e));
         return;
       }
     }
@@ -238,14 +229,14 @@ export default function Profile() {
         <h1 className="section-title">Finished:</h1>
         {isError ? <div>Error loading books</div> : finishedBooks.length === 0 
   ? <div className="book-carousel"><img src={noBooks} alt="No Books" className="book-cover" /></div> 
-  : <BookCarousel books={finishedBooks} onBookClick={setSelectedBook} />}
+  : <BookCarousel books={finishedBooks} onBookClick={setSelectedBook as (book: Book) => void} />}
       </div>
 
       <div className="section-box">
         <h1 className="section-title">To Be Read:</h1>
         {isError ? <div>Error loading books</div> : toReadBooks.length === 0 
   ? <div className="book-carousel"><img src={noBooks} alt="No Books" className="book-cover" /></div> 
-  : <BookCarousel books={toReadBooks} onBookClick={setSelectedBook} />}
+  : <BookCarousel books={toReadBooks} onBookClick={setSelectedBook as (book: Book) => void} />}
       </div>
 
       <div style={{ paddingBottom: '48px' }} />
@@ -253,7 +244,7 @@ export default function Profile() {
       <SideModal 
         book={selectedBook} 
         onClose={() => setSelectedBook(null)}
-        onBookRemoved={() => queryClient.invalidateQueries(['profileBooks'])}
+        onBookRemoved={() => queryClient.invalidateQueries({ queryKey: ['profileBooks'] })}
       />
     </div>
   )

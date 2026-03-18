@@ -1,8 +1,9 @@
 import '../styles/profile.css'
 import { getBookURL } from '../utils/bookCover'
 import { parseInfo } from '../utils/bookCover';
+import type { Book } from '../type/books'
 
-export default function BookCarousel(props: { books, onBookClick?: (book) => void }) {
+export default function BookCarousel(props: { books: Book[], onBookClick?: (book: Book) => void }) {
   
   return (
     <div className="book-carousel">

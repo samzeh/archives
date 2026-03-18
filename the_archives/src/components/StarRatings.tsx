@@ -1,4 +1,3 @@
-import React from 'react'
 import StarIcon from '../assets/star.svg?react';
 import '../styles/ratings.css'
 

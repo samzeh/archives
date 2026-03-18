@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import '../styles/footer.css'
 import { BsSearch } from "react-icons/bs";
 import SearchResults from './SearchResults';
@@ -34,12 +34,6 @@ export default function SearchBar(props: { handleSearch: (id: number) => void })
     }
   }, [])
 
-  useEffect(() => {
-    if (query.length > 0) {
-      setIsResultsVisible(true)
-    }
-  }, [query])
-
   useEffect(()=> {
     const timer = setTimeout(() => {
       setDebouncedQuery(query)
@@ -49,7 +43,7 @@ export default function SearchBar(props: { handleSearch: (id: number) => void })
   }, [query])
 
 
-  const { data: searchResults, isLoading } = useQuery({
+  const { data: searchResults } = useQuery({
     queryKey: ["search_results", debouncedQuery],
     queryFn: () => searchBooks(debouncedQuery),
     enabled: debouncedQuery.length > 0,
@@ -68,7 +62,7 @@ export default function SearchBar(props: { handleSearch: (id: number) => void })
           className="search-input" 
           placeholder="Search for book title..." 
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => { setQuery(e.target.value); setIsResultsVisible(true) }}
           onFocus={() => setIsResultsVisible(true)}
         />
       </div>
