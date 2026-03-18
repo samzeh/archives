@@ -16,7 +16,7 @@ export default function SignupComponent() {
     setError('')
     try {
       await signup(email, password, username)
-      navigate('/recommendation-graph')
+      navigate('/recommendation-list')
     } catch (err) {
       setError(err.message)
     }

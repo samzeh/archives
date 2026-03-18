@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase";
-import { doc, setDoc, deleteDoc, getDocs, collection, query, where, getDoc, runTransaction } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, getDocs, collection, query, where, getDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
@@ -89,8 +89,12 @@ export async function login(identifier: string, password: string): Promise<User>
 export async function logout() {
   try {
     await signOut(auth);
-  } catch (err: any) {
-    console.error("Logout error:", err.message);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Logout error:", err.message);
+    } else {
+      console.error("Logout error:", err);
+    }
   }
 }
 
@@ -101,8 +105,12 @@ export async function deleteAccount(password: string) {
     await reauthenticateWithCredential(user!, credential);
     await deleteDoc(doc(db, "users", user!.uid));
     await user!.delete();
-  } catch (err: any) {
-    console.error("Delete account error:", err.message);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Delete account error:", err.message);
+    } else {
+      console.error("Delete account error:", err);
+    }
   }
 }
 
@@ -176,4 +184,48 @@ export async function getUsername(userId: string) {
   const userRef = doc(db, "users", userId);
   const userDoc = await getDoc(userRef);
   return userDoc.exists() ? userDoc.data().username : null;
+}
+
+export async function changeUsername(userId: string, newUsername: string) {
+  const normalizedUsername = newUsername.trim().toLowerCase();
+  
+  if (!normalizedUsername) {
+    throw new Error("Username cannot be empty");
+  }
+
+  await runTransaction(db, async (transaction) => {
+    const usernameRef = doc(db, "usernames", normalizedUsername);
+    const usernameDoc = await transaction.get(usernameRef);
+    
+    if (usernameDoc.exists()) {
+      throw new Error("Username already taken");
+    }
+
+    const userRef = doc(db, "users", userId);
+    const userDoc = await transaction.get(userRef);
+    const oldUsername = userDoc.data()?.username;
+
+    // delete old username reservation
+    if (oldUsername) {
+      const oldUsernameRef = doc(db, "usernames", oldUsername);
+      transaction.delete(oldUsernameRef);
+    }
+
+    // reserve new username
+    transaction.set(usernameRef, { uid: userId, createdAt: new Date() });
+
+    // update user profile
+    transaction.update(userRef, { username: normalizedUsername });
+  });
+}
+
+export async function changeDisplayName(userId: string, displayName: string) {
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, { displayName: displayName.trim() });
+}
+
+export async function getDisplayName(userId: string): Promise<string | null> {
+  const userRef = doc(db, "users", userId);
+  const userDoc = await getDoc(userRef);
+  return userDoc.data()?.displayName ?? userDoc.data()?.username ?? null;
 }

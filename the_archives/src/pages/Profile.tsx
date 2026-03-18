@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GoHomeFill } from "react-icons/go"
 import BookCarousel from '../components/BookCarousel'
@@ -6,12 +6,11 @@ import SideModal from '../components/SideModal'
 import '../styles/profile.css'
 import { useNavigate } from 'react-router-dom'
 import { getBookInfo } from '../utils/profileBooks'
-import loadingGif from '../assets/loading.gif'
 import noBooks from '../assets/no_books.png'
-import { getUsername, getCurrentUserId } from '../firebase/firestoreFunctions'
+import { getUsername, getCurrentUserId, changeDisplayName, changeUsername } from '../firebase/firestoreFunctions'
 import ProfileButton from '../components/ProfileButton'
 import { AnimatePresence, motion } from 'motion/react'
-import { logout, deleteAccount } from '../firebase/firestoreFunctions'
+import { logout, deleteAccount, getDisplayName,  } from '../firebase/firestoreFunctions'
 import mockPfp from '../assets/mock_pfp.png'
 import ActionButton from '../components/ActionButton'
 import LoadingOverlay from '../components/LoadingOverlay'
@@ -19,21 +18,68 @@ import LoadingOverlay from '../components/LoadingOverlay'
 
 export default function Profile() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
-  const [username, setUsername] = useState('User');
+  const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useState('');
+  const [currentUsername, setCurrentUsername] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [displayNameError, setDisplayNameError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
 
   const queryClient = useQueryClient();
 
   const profileModalRef = useRef<HTMLDivElement>(null)
   
   const handleDeleteAccount = async (password: string) => {
-    await deleteAccount(password)
-    await logout()
-    navigate('/')
+    setDeleteError('');
+    try {
+      await deleteAccount(password)
+      await logout()
+      navigate('/')
+    } catch (e: any) {
+      setDeleteError(e?.message || 'Failed to delete account; check your password.');
+    }
   }
+  
+  const handleSaveClick = async () => {
+    setUsernameError('');
+    setDisplayNameError('');
+    const userId = getCurrentUserId();
+    let hasError = false;
+    if (!username.trim()) {
+      setUsernameError('Username cannot be empty.');
+      hasError = true;
+    }
+    if (!displayName.trim()) {
+      setDisplayNameError('Display name cannot be empty.');
+      hasError = true;
+    }
+    if (hasError) return;
+    try {
+      await changeDisplayName(userId, displayName)
+    } catch (e: any) {
+      setDisplayNameError(e?.message || 'Failed to update display name.');
+      return;
+    }
+    if (username !== currentUsername) {
+      try {
+        await changeUsername(userId, username)
+        setCurrentUsername(username);
+      } catch (e: any) {
+        if (e?.message && e.message.includes('Username already taken')) {
+          setUsernameError('Username already taken.');
+        } else {
+          setUsernameError(e?.message || 'Failed to update username.');
+        }
+        return;
+      }
+    }
+    setShowEditModal(false);
+  }
+
   const {
     data: { finishedBooks = [], toReadBooks = [] } = {},
     isLoading,
@@ -50,11 +96,19 @@ export default function Profile() {
   useEffect(() => {
     const userId = getCurrentUserId();
     if (userId) {
+      getDisplayName(userId).then((displayName) => {
+        if (displayName) {
+          setDisplayName(displayName)
+        }
+      });
       getUsername(userId).then((username) => {
-        setUsername(username)
+        if (username) {
+          setUsername(username);
+          setCurrentUsername(username);
+        }
       });
     }
-  })
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -75,7 +129,7 @@ export default function Profile() {
     navigate('/')
   }
 
-  const displayUsername = username.length > 8 ? username.slice(0, 5) + '...' : username;
+  const displayUsername = displayName.length > 8 ? displayName.slice(0, 5) + '...' : displayName;
 
   return (
     <div style={{ height: '100vh', overflowY: 'auto' }}>
@@ -83,7 +137,7 @@ export default function Profile() {
       <div className="header">
         <h1>{displayUsername}'s Library</h1>
         <div className="header-icons">
-          <GoHomeFill style={{height: '65px', width: '65px', cursor: 'pointer', pointerEvents: 'all'}} onClick={goHome} />
+          <GoHomeFill style={{height: '67px', width: '67px', cursor: 'pointer', pointerEvents: 'all', color: '#62492b'}} onClick={goHome} />
           <div ref={profileModalRef} className="profile-button-wrapper" style={{ position: 'relative', flexShrink: 0 }}>
             <ProfileButton onClick={() => setShowProfileModal((v) => !v)}/>
 
@@ -120,7 +174,7 @@ export default function Profile() {
                   position: 'absolute', bottom: 0, right: -5,
                   background: '#422D13', borderRadius: '50%',
                   width: 27, height: 27, lineHeight: '27px',
-                  textAlign: 'center', color: 'white',
+                  textAlign: 'center', color: '#FFF8EE',
                   fontSize: '1rem', cursor: 'pointer'
                 }}>+</div>
               </div>
@@ -128,18 +182,28 @@ export default function Profile() {
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, gap: 10 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <label style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem' }}>Username</label>
-                  <input className="edit-name-input" defaultValue={username} onBlur={(e) => setUsername(e.target.value)} />
+                  <input
+                    className="edit-name-input"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                  />
+                  {usernameError && <span className="profile-error-text">{usernameError}</span>}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <label style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem' }}>Display Name</label>
-                  <input className="edit-name-input" defaultValue={username} onBlur={(e) => setUsername(e.target.value)} />
+                  <input
+                    className="edit-name-input"
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                  />
+                  {displayNameError && <span className="profile-error-text">{displayNameError}</span>}
                 </div>
               </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12, paddingTop: 10 }}>
               <ActionButton title="delete account" bgColor="#c0392b" textColor="white" onClick={() => { setShowDeleteConfirm(true); setShowEditModal(false) }} />
-              <ActionButton title="save" bgColor="#422D13" textColor="white" onClick={() => setShowEditModal(false)} />
+              <ActionButton title="save" bgColor="#422D13" textColor="white" onClick={() => { handleSaveClick() }} />
             </div>
 
           </div>
@@ -162,9 +226,10 @@ export default function Profile() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {deleteError && <span className="profile-error-text">{deleteError}</span>}
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, paddingTop: '10px' }}>
-              <ActionButton title="cancel" bgColor="#5b4831" textColor="#ffffff" onClick={() => { setShowDeleteConfirm(false); setPassword('') }} />
+              <ActionButton title="cancel" bgColor="#5b4831" textColor="#ffffff" onClick={() => { setShowDeleteConfirm(false); setPassword(''); setDeleteError(''); }} />
               <ActionButton title="delete" bgColor="#c0392b" textColor="white" onClick={() => handleDeleteAccount(password)} />
             </div>
           </div>

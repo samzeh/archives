@@ -4,7 +4,6 @@ import HomeComponent from '../components/HomeComponent.tsx'
 import { useNavigate } from 'react-router-dom'
 import { isLoggedIn } from '../firebase/firestoreFunctions.ts'
 import '../styles/login.css'
-import loadingGif from '../assets/loading.gif'
 import LoadingOverlay from '../components/LoadingOverlay.tsx'
 
 const Home = () => {
