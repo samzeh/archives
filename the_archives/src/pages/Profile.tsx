@@ -28,7 +28,7 @@ export default function Profile() {
   }
 
   return (
-    <>
+    <div style={{ height: '100vh', overflowY: 'auto' }}>
       {isLoading && (
         <div style={{
           position: 'absolute', inset: 0,
@@ -60,12 +60,13 @@ export default function Profile() {
         {toReadBooks.length === 0 && <img src={noBooks} alt="No Books" className="book-cover" />}
       </div>
 
+      <div style={{ paddingBottom: '48px' }} />
+
       <SideModal 
         book={selectedBook} 
         onClose={() => setSelectedBook(null)}
         onBookRemoved={() => queryClient.invalidateQueries(['profileBooks'])}
       />
-    </>
+    </div>
   )
 }
-
