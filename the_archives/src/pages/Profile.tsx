@@ -176,17 +176,7 @@ export default function Profile() {
           <div className="edit-profile-modal">
 
             <div style={{ display: 'flex', flexDirection: 'row', gap: 25, alignItems: 'center' }}>
-              <div style={{ position: 'relative', flexShrink: 0 }}>
-                <img src={mockPfp} style={{ width: 90, height: 90, borderRadius: '50%', border: '2px solid rgba(79,54,24,0.3)', display: 'block' }} />
-                <div style={{
-                  position: 'absolute', bottom: 0, right: -5,
-                  background: '#422D13', borderRadius: '50%',
-                  width: 27, height: 27, lineHeight: '27px',
-                  textAlign: 'center', color: '#FFF8EE',
-                  fontSize: '1rem', cursor: 'pointer'
-                }}>+</div>
-              </div>
-
+              <img src={mockPfp} style={{ width: 90, height: 90, borderRadius: '50%', border: '2px solid rgba(79,54,24,0.3)', display: 'block' }} />
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, gap: 10 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <label style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem' }}>Username</label>
