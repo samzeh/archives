@@ -36,11 +36,15 @@ export default function Profile() {
   const handleDeleteAccount = async (password: string) => {
     setDeleteError('');
     try {
-      await deleteAccount(password)
-      await logout()
-      navigate('/')
-    } catch (e: any) {
-      setDeleteError(e?.message || 'Failed to delete account; check your password.');
+      await deleteAccount(password);
+      await logout();
+      navigate('/');
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setDeleteError(e.message);
+      } else {
+        setDeleteError('Failed to delete account; check your password.');
+      }
     }
   }
   
@@ -60,19 +64,23 @@ export default function Profile() {
     if (hasError) return;
     try {
       await changeDisplayName(userId, displayName)
-    } catch (e: any) {
-      setDisplayNameError(e?.message || 'Failed to update display name.');
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setDisplayNameError(e.message);
+      } else {
+        setDisplayNameError('Failed to update display name.');
+      }
       return;
     }
     if (username !== currentUsername) {
       try {
         await changeUsername(userId, username)
         setCurrentUsername(username);
-      } catch (e: any) {
-        if (e?.message && e.message.includes('Username already taken')) {
-          setUsernameError('Username already taken.');
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setUsernameError(e.message);
         } else {
-          setUsernameError(e?.message || 'Failed to update username.');
+          setUsernameError('Failed to update username.');
         }
         return;
       }

@@ -103,14 +103,24 @@ export async function deleteAccount(password: string) {
   const credential = EmailAuthProvider.credential(user!.email!, password);
   try {
     await reauthenticateWithCredential(user!, credential);
+
+    const userDoc = await getDoc(doc(db, "users", user!.uid));
+    const username = userDoc.data()?.username;
+
+    if (username) {
+      await deleteDoc(doc(db, "usernames", username));
+    }
+
     await deleteDoc(doc(db, "users", user!.uid));
     await user!.delete();
+
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error("Delete account error:", err.message);
     } else {
       console.error("Delete account error:", err);
     }
+    throw err;
   }
 }
 
