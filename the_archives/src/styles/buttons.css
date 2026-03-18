@@ -16,6 +16,8 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
+  min-height: 40px;
+  align-items: center;
 }
 
 .genre-container::-webkit-scrollbar {

@@ -8,6 +8,7 @@ import mockPfp from '../assets/mock_pfp.png'
 import { useNavigate } from 'react-router-dom'
 import { getBookInfo } from '../utils/profileBooks'
 import loadingGif from '../assets/loading.gif'
+import noBooks from '../assets/no_books.png'
 
 export default function Profile() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
@@ -50,11 +51,13 @@ export default function Profile() {
       <div className="section-box">
         <h1 className="section-title">Read:</h1>
         {isError ? <div>Error loading books</div> : <BookCarousel books={finishedBooks} onBookClick={setSelectedBook} />}
+        {finishedBooks.length === 0 && <img src={noBooks} alt="No Books" className="book-cover" />}
       </div>
 
       <div className="section-box">
         <h1 className="section-title">To Be Read:</h1>
         {isError ? <div>Error loading books</div> : <BookCarousel books={toReadBooks} onBookClick={setSelectedBook} />}
+        {toReadBooks.length === 0 && <img src={noBooks} alt="No Books" className="book-cover" />}
       </div>
 
       <SideModal 
