@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GoHomeFill } from "react-icons/go"
 import BookCarousel from '../components/BookCarousel'
 import SideModal from '../components/SideModal'
 import '../styles/profile.css'
-import mockPfp from '../assets/mock_pfp.png'
 import { useNavigate } from 'react-router-dom'
 import { getBookInfo } from '../utils/profileBooks'
 import loadingGif from '../assets/loading.gif'
 import noBooks from '../assets/no_books.png'
 import { getUsername, getCurrentUserId } from '../firebase/firestoreFunctions'
+import ProfileButton from '../components/ProfileButton'
+import { AnimatePresence, motion } from 'motion/react'
+import { logout } from '../firebase/firestoreFunctions'
+
 
 export default function Profile() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [username, setUsername] = useState('User');
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const queryClient = useQueryClient();
+
+  const profileModalRef = useRef<HTMLDivElement>(null)
+  
 
   const {
     data: { finishedBooks = [], toReadBooks = [] } = {},
@@ -36,8 +43,26 @@ export default function Profile() {
         setUsername(username)
       });
     }
-
   })
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileModalRef.current && !profileModalRef.current.contains(e.target as Node)) {
+        setShowProfileModal(false)
+      }
+    }
+
+    if (showProfileModal) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showProfileModal])
+
+  const handleSignOut = async () => {
+    await logout()
+    navigate('/')
+  }
 
   const displayUsername = username.length > 8 ? username.slice(0, 5) + '...' : username;
 
@@ -58,7 +83,27 @@ export default function Profile() {
         <h1>{displayUsername}'s Library</h1>
         <div className="header-icons">
           <GoHomeFill style={{height: '65px', width: '65px', cursor: 'pointer', pointerEvents: 'all'}} onClick={goHome} />
-          <img src={mockPfp} alt="Profile" className="profile-image" />
+          <div ref={profileModalRef} className="profile-button-wrapper" style={{ position: 'relative', flexShrink: 0 }}>
+            <ProfileButton onClick={() => setShowProfileModal((v) => !v)}/>
+
+            <AnimatePresence>
+              {showProfileModal && (
+                <motion.div
+                  className="profile-page-modal"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.17 }}
+                >
+                    <p>edit</p>
+                    <hr />
+                    <p className="danger" onClick={handleSignOut}>log out</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+          </div>
+
         </div>
       </div>
 
