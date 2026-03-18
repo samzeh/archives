@@ -5,15 +5,19 @@ import loadingGif from './assets/loading.gif'
 
 export default function ProtectedRoute() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
+  const [isGuest, setIsGuest] = useState(false)
 
   useEffect(() => {
-    (async () =>{
-      const loggedInStatus = await isLoggedIn()
-      setLoggedIn(loggedInStatus)
-    })()
-  }, [])
+    setIsGuest(localStorage.getItem('guest') === 'true')
+    if (!isGuest) {
+      (async () =>{
+        const loggedInStatus = await isLoggedIn()
+        setLoggedIn(loggedInStatus)
+      })()
+    }
+  }, [isGuest])
 
-  if (loggedIn == null) 
+  if (loggedIn == null && !isGuest) 
     return (
     <div style={{
       position: 'absolute', inset: 0,
@@ -25,7 +29,6 @@ export default function ProtectedRoute() {
       <p> loading... </p>
     </div>
   )
-  return loggedIn ? <Outlet /> : <Navigate to="/" />
-
+  return (loggedIn || isGuest) ? <Outlet /> : <Navigate to="/" />
 }
 

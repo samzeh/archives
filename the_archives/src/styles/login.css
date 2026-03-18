@@ -169,7 +169,7 @@
   }
 
   .welcome-text {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     text-align: center;
     margin: 0;
   }
@@ -184,10 +184,21 @@
     padding: 8px 10px;
     font-size: 0.85rem;
     width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .password-wrapper .login-input {
     padding-right: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .login-box .login-input {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .login-button {
@@ -204,5 +215,13 @@
 
   .password-toggle {
     font-size: 0.9rem;
+  }
+
+  .action-links {
+    justify-content: center;
+    width: 100%;
+  }
+  .action-links p {
+    font-size: 1.2rem;
   }
 }

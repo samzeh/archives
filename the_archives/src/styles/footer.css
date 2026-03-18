@@ -35,6 +35,10 @@
   margin-top: 5px;
 }
 
+.search-input::placeholder {
+  font-size: 1.1rem;
+}
+
 .profile-button {
   height: 50px;
   width: 50px;
@@ -192,5 +196,9 @@
 
   .search-results-box {
     border-radius: 14px;
+  }
+
+  .search-input::placeholder {
+    font-size: 0.85rem;
   }
 }

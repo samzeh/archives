@@ -1,12 +1,14 @@
 import React from 'react'
 import '../styles/login.css'
+import { useNavigate } from 'react-router-dom'
 
 interface DefaultHomeComponentsProps {
   setSelectedOption: React.Dispatch<React.SetStateAction<"login" | "signup" | "guest" | "forgot_password" | null>>
 }
 
 export default function DefaultHomeComponents({ setSelectedOption }: DefaultHomeComponentsProps)  {
-  
+  const navigate = useNavigate()
+
   const handleLoginClick = () => {
     setSelectedOption("login")
   }
@@ -16,7 +18,8 @@ export default function DefaultHomeComponents({ setSelectedOption }: DefaultHome
   }
 
   const handleGuestClick = () => {
-    setSelectedOption("guest")
+    localStorage.setItem('guest', 'true')
+    navigate('/recommendation-list')
   }
 
   return (

@@ -59,12 +59,11 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
     }
   }
 
+  const isGuest = localStorage.getItem('guest') === 'true'
 
   return (
     <motion.div className="expanded-detail-card" layoutId="book-card" onClick={props.onCollapse} transition={{ type: 'spring', stiffness: 180, damping: 26 }}>
-      <div
-        className="info-section"
-      >
+      <div className="info-section">
         <img 
           src={getBookURL(props.bookInfo.label ?? '', displayAuthor)}
           data-book-key={cacheKey}
@@ -78,19 +77,25 @@ export default function ExpandedDetailCard(props: { onCollapse: () => void, book
             <ActionButton   
               onClick={(e) => {
                 e.stopPropagation();
+                if (isGuest) return;
                 handleAddToProfile({ book_id: String(props.bookInfo.book_id), your_ratings: 0, comment: '', status: "to_read" });
               }} 
               title="to read" 
               bgColor='#7AC970' 
-              textColor='#ffffff'/>
+              textColor='#ffffff'
+              disabled={isGuest}
+            />
             <ActionButton 
               onClick={(e) => {
                 e.stopPropagation();
+                if (isGuest) return;
                 handleAddToProfile({ book_id: String(props.bookInfo.book_id), your_ratings: 0, comment: '', status: "finished" });
               }} 
               title="finished" 
               bgColor='#D9D9D9' 
-              textColor='#000000' />
+              textColor='#000000' 
+              disabled={isGuest}
+            />
           </div>
           {addStatus && (
             <div style={{ color: addStatus.includes('added') ? 'green' : 'red', marginTop: 8, fontSize: '0.95em' }}>{addStatus}</div>
