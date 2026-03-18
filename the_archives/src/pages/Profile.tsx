@@ -11,18 +11,27 @@ import noBooks from '../assets/no_books.png'
 import { getUsername, getCurrentUserId } from '../firebase/firestoreFunctions'
 import ProfileButton from '../components/ProfileButton'
 import { AnimatePresence, motion } from 'motion/react'
-import { logout } from '../firebase/firestoreFunctions'
+import { logout, deleteAccount } from '../firebase/firestoreFunctions'
+import mockPfp from '../assets/mock_pfp.png'
 
 
 export default function Profile() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [username, setUsername] = useState('User');
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [password, setPassword] = useState('');
+
   const queryClient = useQueryClient();
 
   const profileModalRef = useRef<HTMLDivElement>(null)
   
-
+  const handleDeleteAccount = async (password: string) => {
+    await deleteAccount(password)
+    await logout()
+    navigate('/')
+  }
   const {
     data: { finishedBooks = [], toReadBooks = [] } = {},
     isLoading,
@@ -95,7 +104,7 @@ export default function Profile() {
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.17 }}
                 >
-                    <p>edit</p>
+                    <p onClick={() => setShowEditModal((v) => !v)}>edit</p>
                     <hr />
                     <p className="danger" onClick={handleSignOut}>log out</p>
                 </motion.div>
@@ -106,6 +115,63 @@ export default function Profile() {
 
         </div>
       </div>
+
+      {showEditModal && (
+        <>
+          <div className="modal-backdrop" onClick={() => setShowEditModal(false)} />
+          <div className="edit-profile-modal">
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <img src={mockPfp} style={{ width: 70, height: 70, borderRadius: '50%', border: '2px solid rgba(79,54,24,0.3)' }} />
+              <div style={{
+                position: 'absolute', bottom: 0, right: 0,
+                background: '#422D13', borderRadius: '50%',
+                width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontSize: '0.8rem', cursor: 'pointer'
+              }}>+</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem' }}>Display Name</label>
+              <input
+                className="edit-name-input"
+                defaultValue={username}
+                onBlur={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <p className="danger" onClick={() => {
+              setShowDeleteConfirm(true) 
+              setShowEditModal(false)
+              }
+              } style={{ cursor: 'pointer', fontFamily: 'Courier Prime', textAlign: 'right', margin: 0 }}>
+              delete account
+            </p>
+          </div>
+        </>
+      )}
+
+      {showDeleteConfirm && (
+        <>
+          <div className="modal-backdrop" onClick={() => setShowDeleteConfirm(false)} />
+          <div className="edit-profile-modal">
+            <p style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem', margin: 0 }}>
+              Are you sure you want to delete your account? This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontFamily: 'Courier Prime', color: '#422D13', fontSize: '1rem' }}>Enter your password to confirm</label>
+              <input
+                className="edit-name-input"
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+              <button className="confirm-cancel-btn" onClick={() => { setShowDeleteConfirm(false); setPassword('') }}>cancel</button>
+              <button className="confirm-delete-btn" onClick={() => handleDeleteAccount(password)}>delete</button>
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="section-box">
         <h1 className="section-title">Finished:</h1>
