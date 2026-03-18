@@ -23,6 +23,8 @@ function Graph() {
   const [nodesById, setNodesById] = useState<Map<number, NodeObject>>(new Map())
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const profileModalRef = useRef<HTMLDivElement>(null)
+
   const navigate = useNavigate()
   const goToProfile = () => {
     navigate('/profile-page')
@@ -38,6 +40,20 @@ function Graph() {
       localStorage.setItem('likedBookId', likedBookId.toString())
     }
   }, [likedBookId])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileModalRef.current && !profileModalRef.current.contains(e.target as Node)) {
+        setShowProfileModal(false)
+      }
+    }
+
+    if (showProfileModal) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showProfileModal])
 
   return (
     <>
@@ -85,7 +101,7 @@ function Graph() {
         <SearchBar 
           handleSearch={(id: number) => setLikedBookId(id)}
         />
-        <div style={{ position: 'relative', flexShrink: 0 }}>
+        <div ref={profileModalRef} style={{ position: 'relative', flexShrink: 0 }}>
           <ProfileButton onClick={() => setShowProfileModal((v) => !v)} />
           <AnimatePresence>
             {showProfileModal && (

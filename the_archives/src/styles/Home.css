@@ -88,5 +88,11 @@
     padding: 6px;
     bottom: 8px;
   }
+
+  .profile-modal {
+    left: auto;
+    right: 0;
+    font-size: 0.9rem;
+  }
 }
 
