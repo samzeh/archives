@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase";
-import { doc, setDoc, deleteDoc, getDocs, collection, query, where, getDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, getDocs, collection, query, where, getDoc, runTransaction } from "firebase/firestore";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
@@ -14,11 +14,58 @@ import type { ProfileBook } from "../type/books";
 
 
 export async function signup (email: string, password: string, username: string): Promise<User> {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-  const user = userCredential.user;
+  const normalizedUsername = username.trim().toLowerCase();
+  
+  if (!normalizedUsername) {
+    throw new Error("Username cannot be empty");
+  }
 
-  await setDoc(doc(db, "users", user.uid), {username, email})
-  return user;
+    let user: User | null = null;
+
+    try {
+
+      await runTransaction(db, async (transaction) => {
+        const usernameRef = doc(db, "usernames", normalizedUsername);
+        const usernameDoc = await transaction.get(usernameRef);
+
+        if (usernameDoc.exists()) {
+          throw new Error("Username already taken");
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        user = userCredential.user;
+
+        const userRef = doc(db, "users", user.uid);
+
+        transaction.set(usernameRef, {
+          uid: user.uid,
+          createdAt: new Date()
+        });
+
+        transaction.set(userRef, {
+          username: normalizedUsername,
+          email: email,
+          createdAt: new Date()
+        });
+      }
+    );
+
+    if (!user) throw new Error("User creation failed");
+
+    return user;
+
+  } catch (error) {
+    // Cleanup if auth user was created
+    if (user) {
+      await (user as User).delete().catch(() => {});
+    }
+    throw error;
+  }
 }
 
 export async function login(identifier: string, password: string): Promise<User> {
