@@ -199,6 +199,7 @@
   font-size: 1rem;
   color: #422D13;
   cursor: pointer;
+  text-align: right;
 }
 
 .profile-page-modal p:hover {
