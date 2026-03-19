@@ -24,49 +24,56 @@ export async function signup (email: string, password: string, username: string)
     let user: User | null = null;
 
     try {
-
       await runTransaction(db, async (transaction) => {
-        const usernameRef = doc(db, "usernames", normalizedUsername);
-        const usernameDoc = await transaction.get(usernameRef);
+        try {
+          const usernameRef = doc(db, "usernames", normalizedUsername);
+          const usernameDoc = await transaction.get(usernameRef);
 
-        if (usernameDoc.exists()) {
-          throw new Error("Username already taken");
+          if (usernameDoc.exists()) {
+            throw new Error("Username already taken");
+          }
+
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          user = userCredential.user;
+
+          const userRef = doc(db, "users", user.uid);
+
+          transaction.set(usernameRef, {
+            uid: user.uid,
+            createdAt: new Date()
+          });
+
+          transaction.set(userRef, {
+            username: normalizedUsername,
+            email: email,
+            createdAt: new Date()
+          });
+        } catch (err) {
+          // Always rethrow as a plain error so it is caught by the outer catch
+          if (err instanceof Error) {
+            throw new Error(err.message);
+          } else {
+            throw new Error(String(err));
+          }
         }
+      });
 
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+      if (!user) throw new Error("User creation failed");
 
-        user = userCredential.user;
+      return user;
 
-        const userRef = doc(db, "users", user.uid);
-
-        transaction.set(usernameRef, {
-          uid: user.uid,
-          createdAt: new Date()
-        });
-
-        transaction.set(userRef, {
-          username: normalizedUsername,
-          email: email,
-          createdAt: new Date()
-        });
+    } catch (error) {
+      // Cleanup if auth user was created
+      if (user) {
+        await (user as User).delete().catch(() => {});
       }
-    );
-
-    if (!user) throw new Error("User creation failed");
-
-    return user;
-
-  } catch (error) {
-    // Cleanup if auth user was created
-    if (user) {
-      await (user as User).delete().catch(() => {});
+      throw error;
     }
-    throw error;
-  }
 }
 
 export async function login(identifier: string, password: string): Promise<User> {

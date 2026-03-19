@@ -20,6 +20,7 @@ export default function SignupComponent() {
       await signup(email, password, username)
       navigate('/recommendation-list')
     } catch (e) {
+      console.log("SIGNUP ERROR", e);
       setError(getErrorMessage(e));
     }
   }
@@ -43,4 +44,5 @@ export default function SignupComponent() {
     </div>
   )
 }
+
 
