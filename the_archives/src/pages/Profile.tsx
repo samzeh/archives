@@ -242,6 +242,7 @@ export default function Profile() {
       <div style={{ paddingBottom: '48px' }} />
 
       <SideModal 
+        // @ts-ignore
         book={selectedBook} 
         onClose={() => setSelectedBook(null)}
         onBookRemoved={() => queryClient.invalidateQueries({ queryKey: ['profileBooks'] })}

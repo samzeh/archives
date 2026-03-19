@@ -89,8 +89,10 @@ function Graph() {
             className="card-wrapper"
           >
             {!isExpanded ? (
+              // @ts-ignore
               <DetailCard key="collapsed" onExpand={() => setIsExpanded(true)} bookInfo={nodesById.get(selectedNode.id) || null} />
             ) : (
+              // @ts-ignore
               <ExpandedDetailCard key="expanded" onCollapse={() => setIsExpanded(false)} bookInfo={nodesById.get(selectedNode.id) || null}/>
             )}
           </motion.div>

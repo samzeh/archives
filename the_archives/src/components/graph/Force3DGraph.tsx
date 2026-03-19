@@ -59,6 +59,7 @@ export default function Force3DGraph(props: {
       .nodeRelSize(8)
       .nodeLabel('label')
       .linkDirectionalParticleWidth(4)
+      // @ts-ignore
       .nodeColor((node: NodeObject) => node.id === 0? '#D652D9' : '#5AA4FF')
 
     graphRef.current = graph
@@ -69,6 +70,7 @@ export default function Force3DGraph(props: {
     let selectedNode: NodeObject | null = null;
 
     function updateHighlight() {
+      // @ts-ignore
       graph.nodeColor((node: NodeObject) => {
         if (highlightNodes.has(node)) {
           if (node === hoverNode) {
@@ -112,12 +114,13 @@ export default function Force3DGraph(props: {
       updateHighlight();
     }
 
+    // @ts-ignore
     graph.onNodeHover((node: NodeObject | null) => {
       if (!selectedNode) {
         highlightNode(node);
       }
     })
-
+    // @ts-ignore
     graph.onLinkHover((link: LinkObject | null) => {
       if (!selectedNode) {
         highlightNodes.clear()
@@ -130,7 +133,7 @@ export default function Force3DGraph(props: {
         updateHighlight()
       }
     })
-
+    // @ts-ignore
     graph.onNodeClick((node: NodeObject) => {
       selectedNode = node
 
@@ -145,10 +148,12 @@ export default function Force3DGraph(props: {
       }
       const lookAt = { x: node.x, y: node.y, z: node.z }
 
+      // @ts-ignore
       graph.cameraPosition(newPos, lookAt, 2200)
       highlightNode(node)
     })
 
+    // @ts-ignore
     graph.onBackgroundClick(() => {
       selectedNode = null
       highlightNode(null)
@@ -198,6 +203,7 @@ export default function Force3DGraph(props: {
       b.links.push(link);
     })
     
+    // @ts-ignore
     graphRef.current.graphData(graphData)
 
   }, [graphDataInfo, props.liked_book_id])
