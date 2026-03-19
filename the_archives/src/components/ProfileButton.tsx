@@ -1,5 +1,5 @@
-import '../styles/footer.css'
 import mockPfp from '../assets/mock_pfp.png'
+import '../styles/footer.css'
 
 export default function ProfileButton(props: { onClick?: () => void }) {
   return (

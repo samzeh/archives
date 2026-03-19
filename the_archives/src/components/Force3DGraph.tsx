@@ -1,7 +1,6 @@
-import React, { useRef, useEffect } from 'react'
-import ForceGraph3D from '3d-force-graph'
+import { useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import loadingGif from '../assets/loading.gif'
+import ForceGraph3D from '3d-force-graph'
 import LoadingOverlay from './LoadingOverlay'
 
 interface ForceGraph3DInstance {

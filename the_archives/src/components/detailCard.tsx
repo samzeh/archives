@@ -1,8 +1,9 @@
-import '../styles/detailpage.css'
-import StarRatings from './StarRatings'
-import { motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
+import { motion } from 'motion/react'
 import { getBookURL, parseInfo } from '../utils/bookCover'
+import StarRatings from './StarRatings'
+import '../styles/detailpage.css'
+
 
 interface DetailBookInfo {
   label?: string

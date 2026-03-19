@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import '../styles/login.css'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { signup } from '../firebase/firestoreFunctions'
 import { useNavigate } from 'react-router-dom'
 import { getErrorMessage } from '../utils/error'
+import { signup } from '../firebase/firestoreFunctions'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import '../styles/login.css'
+
 
 export default function SignupComponent() {
   const [ showPassword, setShowPassword] = useState(false)

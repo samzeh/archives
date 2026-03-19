@@ -1,13 +1,13 @@
-import React from 'react'
-import '../styles/login.css'
+import { useState } from 'react'
 import LoginComponent from './LoginComponent.tsx'
 import SignupComponent from './SignupComponent.tsx'
 import DefaultHomeComponents from './DefaultHomeComponents.tsx'
 import ForgotPassword from './ForgotPassword.tsx'
-import { useState } from 'react'
+import '../styles/login.css'
+
 
 export default function HomeComponent() {
-  const [selectedOption, setSelectedOption] = useState<"login" | "signup" | "guest" | null>(null)
+  const [selectedOption, setSelectedOption] = useState<"login" | "signup" | "guest" | "forgot_password" | null>(null)
 
   const handleWelcomeText = () => {
     setSelectedOption(null)

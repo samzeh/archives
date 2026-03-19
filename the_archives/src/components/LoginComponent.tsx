@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import '../styles/login.css'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { login } from '../firebase/firestoreFunctions'
 import { useNavigate } from 'react-router-dom'
 import { getErrorMessage } from '../utils/error'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import '../styles/login.css'
+
 
 interface DefaultHomeComponentsProps {
   setSelectedOption: React.Dispatch<React.SetStateAction<"login" | "signup" | "guest" | "forgot_password" | null>>

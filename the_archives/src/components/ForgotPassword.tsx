@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import '../styles/login.css'
 import { resetPassword } from '../firebase/firestoreFunctions'
 import { getErrorMessage } from '../utils/error'
+import '../styles/login.css'
 
 interface DefaultHomeComponentsProps {
   setSelectedOption: React.Dispatch<React.SetStateAction<"login" | "signup" | "guest" | "forgot_password" | null>>

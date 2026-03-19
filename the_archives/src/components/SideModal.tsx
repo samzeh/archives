@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react'
-import '../styles/profile.css'
-import StarRatings from './StarRatings'
-import ActionButton from './ActionButton'
-import GenreCarousel from './GenreCarousel'
 import { getBookURL, parseInfo } from '../utils/bookCover'
 import { removeBookFromProfile, getCurrentUserId, addRating, addComment, getRating, getComment, addBookToProfile } from '../firebase/firestoreFunctions'
 import { getErrorMessage } from '../utils/error';
+import StarRatings from './StarRatings'
+import ActionButton from './ActionButton'
+import GenreCarousel from './GenreCarousel'
+import '../styles/profile.css'
+
 
 interface BookType {
   book_id: number;

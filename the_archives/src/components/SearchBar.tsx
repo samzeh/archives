@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
-import '../styles/footer.css'
+import { useQuery } from '@tanstack/react-query';
 import { BsSearch } from "react-icons/bs";
 import SearchResults from './SearchResults';
-import { useQuery } from '@tanstack/react-query';
+import '../styles/footer.css'
+
 
 const searchBooks = async(search_query: string) => {
   const response = await fetch(`/api/books/search?q=${encodeURIComponent(search_query)}`)
