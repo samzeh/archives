@@ -1,8 +1,8 @@
-import requests
+import gdown
+import os
 
 url = "https://drive.google.com/uc?export=download&id=1AlW2r1rAkI4nAMKQVzp1-WrUIIqSx-UD"
-output_path = "backend/model-backend/notebooks/artifacts.pkl.gz"
+output_path = "notebooks/artifacts.pkl.gz"
 
-r = requests.get(url, allow_redirects=True)
-with open(output_path, "wb") as f:
-    f.write(r.content)
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
+gdown.download(url, output_path, quiet=False)
