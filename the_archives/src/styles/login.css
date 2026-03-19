@@ -1,3 +1,10 @@
+.signup-error {
+  color: #d32f2f;
+  margin-top: 16px;
+  font-size: 0.85em;
+  text-align: left;
+}
+
 .home-box {
   display: flex;
   position: fixed;

@@ -35,7 +35,7 @@ export default function SignupComponent() {
         </button>
       </div>
       {error && (
-        <div style={{ color: 'red', fontSize: '0.85em', marginTop: 16, textAlign: 'left' }}>
+        <div className="signup-error">
           {error}
         </div>
       )}

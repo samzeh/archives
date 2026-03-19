@@ -108,6 +108,10 @@ export async function deleteAccount(password: string) {
       await deleteDoc(doc(db, "usernames", username));
     }
 
+    const savedBooksRef = collection(db, "users", user!.uid, "saved_books");
+    const savedBooksSnapshot = await getDocs(savedBooksRef);
+    await Promise.all(savedBooksSnapshot.docs.map(d => deleteDoc(d.ref)));
+
     await deleteDoc(doc(db, "users", user!.uid));
     await user!.delete();
 
