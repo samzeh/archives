@@ -14,14 +14,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open('./data/processed/artifacts.pkl', 'rb') as f:
+# Uncompressed pkl file
+# with open('./data/processed/artifacts.pkl', 'rb') as f:
+#     artifacts = pickle.load(f)
+
+# Compressed pkl file
+with open('./data/processed/artifacts.pkl.gz', 'rb') as f:
     artifacts = pickle.load(f)
 
 group_text_result = artifacts['group_text_result']
 genre_result = artifacts['genre_result']
 user_rating_similarities = artifacts['user_rating_similarities']
 book_id_list = artifacts['book_id_list']
-# ratings_matrix = artifacts['ratings_matrix']  MAYBE REMOVE FROM HYRBID MODEL
 
 books_df = pd.read_csv('./data/raw/books.csv')
 
