@@ -11,7 +11,7 @@
 
 .bottom-text {
   position: absolute;
-  bottom: 14px;
+  bottom: 10px;
   right: 20px;
   margin: 0;
   font-size: .8rem !important;
@@ -68,6 +68,8 @@ h1.book-title {
 
 .detail-card-left {
   aspect-ratio: 5 / 7;
+  max-height: 95%;    /* slightly smaller */
+  align-self: center;
 }
 
 /* Tablet */
@@ -84,6 +86,10 @@ h1.book-title {
   .detail-card-left {
     max-height: 160px;
     width: auto;
+  }
+  
+  .bottom-text {
+    bottom: 4px;
   }
 }
 
@@ -110,7 +116,7 @@ h1.book-title {
   .bottom-text {
     font-size: 0.65rem !important;
     right: 12px;
-    bottom: 8px;
+    bottom: 1.4px;
     margin-right: 4px;
   }
 
