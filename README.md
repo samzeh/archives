@@ -1,6 +1,9 @@
 # The Archives
 
 ## Project Overview
+
+https://github.com/user-attachments/assets/7e75f475-4c25-4182-9726-a85987f7a0e5
+
 Welcome to The Archives.
 
 Explore book recommendations from 10k+ of GoodReads most popular books (full list: https://github.com/zygmuntz/goodbooks-10k.git).
